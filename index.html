@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFA AI - BẢO VỆ SỐ QUỐC GIA</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #f3f4f6;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f293d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .badge-lua-dao {
+      background-color: rgba(153, 27, 27, 0.4);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.5);
+    }
+
+    .badge-nguy-hiem {
+      background-color: rgba(154, 52, 18, 0.4);
+      color: #fdba74;
+      border: 1px solid rgba(249, 115, 22, 0.5);
+    }
+
+    .badge-canh-bao {
+      background-color: rgba(120, 53, 15, 0.4);
+      color: #fde047;
+      border: 1px solid rgba(234, 179, 8, 0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden selection:bg-cyan-500 selection:text-black">
+
+  <!-- HEADER / NAVIGATION -->
+  <header class="sticky top-0 z-40 bg-[#0b0f19]/90 backdrop-blur-md border-b border-gray-800/60 px-4 lg:px-8 py-3 transition-all duration-200">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- LOGO AFA AI -->
+      <div onclick="switchTab('trang-chu')" class="flex items-center gap-3 cursor-pointer group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="shield-check" class="w-6 h-6 text-black fill-current"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl font-black tracking-wider text-white">AFA <span class="text-cyan-400">AI</span></span>
+          </div>
+          <p class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold">Bảo vệ số quốc gia</p>
+        </div>
+      </div>
+
+      <!-- NAV MENU (Đã bỏ Báo Cáo Vi Phạm) -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+        <button id="nav-trang-chu" onclick="switchTab('trang-chu')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-cyan-400 bg-cyan-950/40 border border-cyan-800/50">Trang Chủ</button>
+        <button id="nav-ai-phan-tich" onclick="switchTab('ai-phan-tich')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-gray-800/50">AI Phân Tích</button>
+        <button id="nav-tra-cuu" onclick="switchTab('tra-cuu')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-gray-800/50">Tra Cứu Dữ Liệu</button>
+        <button id="nav-cam-nang" onclick="switchTab('cam-nang')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-gray-800/50">Cẩm Nang Lừa Đảo</button>
+      </nav>
+
+      <!-- RIGHT BUTTONS -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleChatModal()" class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 text-xs font-semibold hover:bg-cyan-900/50 transition-all">
+          <i data-lucide="bot" class="w-4 h-4 text-cyan-400"></i>
+          <span>AI Tư Vấn 24/7</span>
+        </button>
+
+        <button onclick="switchTab('bao-cao')" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 transition-all active:scale-95">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          <span>Báo Cáo Lừa Đảo</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8">
+
+    <!-- ==================== 1. TRANG CHỦ ==================== -->
+    <section id="tab-trang-chu" class="tab-content space-y-8">
+      
+      <!-- CAROUSEL / SLIDER BANNER (LƯỚT BANNER ĐẶC BIỆT Ở TRANG CHỦ) -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 border border-gray-800/80 shadow-2xl">
+        <div id="banner-slider" class="flex transition-transform duration-500 ease-out" style="transform: translateX(0%);">
+          
+          <!-- Slide 1 -->
+          <div class="w-full flex-shrink-0 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4 max-w-xl">
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-cyan-950 text-cyan-400 border border-cyan-800/80">
+                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> HỆ THỐNG AN NINH MẠNG QUỐC GIA ỨNG DỤNG AI
+              </span>
+              <h1 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                Lá Chắn Thông Minh Bảo Vệ Bạn Trên <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Không Gian Số</span>
+              </h1>
+              <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                AFA AI sử dụng mô hình trí tuệ nhân tạo Gemini tiên tiến để phân tích đa tầng, phát hiện sớm các thủ đoạn lừa đảo tinh vi, kiểm tra tài khoản nghi vấn và tư vấn an toàn 24/7.
+              </p>
+              <div class="flex flex-wrap gap-4 pt-2">
+                <button onclick="switchTab('ai-phan-tich')" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/25 transition-all flex items-center gap-2">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i> Phân Tích AI Ngay
+                </button>
+                <button onclick="switchTab('tra-cuu')" class="px-6 py-3 rounded-xl bg-gray-800/80 hover:bg-gray-700 text-gray-200 border border-gray-700 font-semibold text-sm transition-all flex items-center gap-2">
+                  <i data-lucide="search" class="w-4 h-4"></i> Tra Cứu Danh Sách Đen
+                </button>
+              </div>
+            </div>
+
+            <div class="relative w-full max-w-xs md:max-w-sm aspect-square flex items-center justify-center">
+              <div class="absolute inset-0 rounded-full bg-cyan-500/10 blur-3xl"></div>
+              <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border border-cyan-500/30 flex items-center justify-center relative bg-gradient-to-b from-cyan-950/20 to-transparent">
+                <div class="w-48 h-48 md:w-60 md:h-60 rounded-full border border-cyan-400/20 flex items-center justify-center">
+                  <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-cyan-500/20 flex items-center justify-center shadow-inner">
+                    <i data-lucide="shield" class="w-16 h-16 md:w-20 md:h-20 text-cyan-400"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="w-full flex-shrink-0 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4 max-w-xl">
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-950 text-amber-400 border border-amber-800/80">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> CẢNH BÁO LỪA ĐẢO DEEPFAKE
+              </span>
+              <h1 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                Nhận Diện <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">Video Call Giả Mạo</span> Bằng AI
+              </h1>
+              <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                Kẻ gian sử dụng AI ghép mặt và giọng nói của người thân để hỏi mượn tiền gấp. Hãy luôn gọi lại trực tiếp bằng đường dây viễn thông để xác minh trước khi chuyển tiền!
+              </p>
+              <div class="flex flex-wrap gap-4 pt-2">
+                <button onclick="switchTab('cam-nang')" class="px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-lg shadow-amber-600/25 transition-all flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4"></i> Xem Cẩm Nang Phòng Tránh
+                </button>
+              </div>
+            </div>
+
+            <div class="relative w-full max-w-xs md:max-w-sm aspect-square flex items-center justify-center">
+              <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border border-amber-500/30 flex items-center justify-center relative bg-gradient-to-b from-amber-950/20 to-transparent">
+                <i data-lucide="video-off" class="w-20 h-20 text-amber-400"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="w-full flex-shrink-0 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4 max-w-xl">
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-red-950 text-red-400 border border-red-800/80">
+                <i data-lucide="users" class="w-3.5 h-3.5"></i> CHUNG TAY BẢO VỆ CỘNG ĐỒNG
+              </span>
+              <h1 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                Gửi Báo Cáo <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-500">Tài Khoản & Link Lừa Đảo</span>
+              </h1>
+              <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                Mỗi báo cáo của bạn góp phần làm giàu cơ sở dữ liệu cảnh báo, giúp hàng triệu người dân phòng tránh khỏi các bẫy lừa đảo trực tuyến.
+              </p>
+              <div class="flex flex-wrap gap-4 pt-2">
+                <button onclick="switchTab('bao-cao')" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm shadow-lg shadow-red-600/25 transition-all flex items-center gap-2">
+                  <i data-lucide="send" class="w-4 h-4"></i> Báo Cáo Ngay
+                </button>
+              </div>
+            </div>
+
+            <div class="relative w-full max-w-xs md:max-w-sm aspect-square flex items-center justify-center">
+              <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border border-red-500/30 flex items-center justify-center relative bg-gradient-to-b from-red-950/20 to-transparent">
+                <i data-lucide="user-x" class="w-20 h-20 text-red-400"></i>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Carousel Navigation Controls -->
+        <button onclick="moveSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-sm border border-gray-700 transition-all">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <button onclick="moveSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-sm border border-gray-700 transition-all">
+          <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Carousel Indicators -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+          <button onclick="setSlide(0)" class="slide-dot w-3 h-3 rounded-full bg-cyan-400 transition-all"></button>
+          <button onclick="setSlide(1)" class="slide-dot w-3 h-3 rounded-full bg-gray-600 transition-all"></button>
+          <button onclick="setSlide(2)" class="slide-dot w-3 h-3 rounded-full bg-gray-600 transition-all"></button>
+        </div>
+      </div>
+
+      <!-- STATS GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-5 rounded-xl bg-gray-900/60 border border-gray-800/80 text-center space-y-1">
+          <h3 class="text-2xl md:text-3xl font-extrabold text-cyan-400">128,450+</h3>
+          <p class="text-xs text-gray-400 font-medium">Báo cáo đã xử lý</p>
+        </div>
+        <div class="p-5 rounded-xl bg-gray-900/60 border border-gray-800/80 text-center space-y-1">
+          <h3 class="text-2xl md:text-3xl font-extrabold text-red-400">45,210+</h3>
+          <p class="text-xs text-gray-400 font-medium">STK & SĐT bị chặn</p>
+        </div>
+        <div class="p-5 rounded-xl bg-gray-900/60 border border-gray-800/80 text-center space-y-1">
+          <h3 class="text-2xl md:text-3xl font-extrabold text-emerald-400">99.4%</h3>
+          <p class="text-xs text-gray-400 font-medium">Độ chính xác AI</p>
+        </div>
+        <div class="p-5 rounded-xl bg-gray-900/60 border border-gray-800/80 text-center space-y-1">
+          <h3 class="text-2xl md:text-3xl font-extrabold text-amber-400">24/7</h3>
+          <p class="text-xs text-gray-400 font-medium">Trợ lý AI hỗ trợ</p>
+        </div>
+      </div>
+
+      <!-- FEATURE CARDS -->
+      <div class="space-y-4">
+        <h2 class="text-xl font-bold text-center text-gray-200">Tính Năng Cốt Lõi Của AFA</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div onclick="switchTab('ai-phan-tich')" class="p-6 rounded-2xl bg-gray-900/60 border border-gray-800 hover:border-cyan-500/50 transition-all cursor-pointer group space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-950 text-cyan-400 border border-cyan-800/60 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="cpu" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">Phân Tích Bằng AI</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">Dán nội dung tin nhắn, website hoặc tài khoản để AI thẩm định tức thì.</p>
+          </div>
+
+          <div onclick="switchTab('tra-cuu')" class="p-6 rounded-2xl bg-gray-900/60 border border-gray-800 hover:border-cyan-500/50 transition-all cursor-pointer group space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-950 text-cyan-400 border border-cyan-800/60 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="database" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">Tra Cứu Cơ Sở Dữ Liệu</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">Tra cứu danh sách đen lừa đảo cập nhật từ Bộ Công An và đóng góp từ cộng đồng.</p>
+          </div>
+
+          <div onclick="switchTab('cam-nang')" class="p-6 rounded-2xl bg-gray-900/60 border border-gray-800 hover:border-cyan-500/50 transition-all cursor-pointer group space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-950 text-cyan-400 border border-cyan-800/60 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <i data-lucide="book-marked" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">Cẩm Nang & Nhận Diện</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">Nâng cao kiến thức nhận biết kịch bản lừa đảo giả danh, Deepfake, việc làm online.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== 2. AI PHÂN TÍCH ==================== -->
+    <section id="tab-ai-phan-tich" class="tab-content hidden space-y-6">
+      <div class="text-center space-y-2">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-cyan-950 text-cyan-400 border border-cyan-800/80 uppercase tracking-wider">Trí tuệ nhân tạo chuyên sâu</span>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white">AI Phân Tích & Phát Hiện Lừa Đảo</h1>
+        <p class="text-gray-400 text-xs md:text-sm max-w-2xl mx-auto">Dán đường link nghi vấn, nội dung tin nhắn, số tài khoản hoặc số điện thoại. Gemini AI sẽ phân tích các điểm bất thường và đánh giá mức độ rủi ro ngay lập tức.</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto p-6 md:p-8 rounded-2xl bg-gray-900/80 border border-gray-800/90 shadow-xl space-y-6">
+        <!-- Sub-tabs -->
+        <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-4">
+          <button class="px-4 py-2 rounded-lg text-xs font-semibold bg-cyan-500 text-black shadow-md flex items-center gap-1.5"><i data-lucide="link" class="w-3.5 h-3.5"></i> Kiểm Tra Link / Website</button>
+          <button class="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 flex items-center gap-1.5"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> Tin Nhắn / Email Nghi Vấn</button>
+          <button class="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 flex items-center gap-1.5"><i data-lucide="credit-card" class="w-3.5 h-3.5"></i> Tra Cứu STK / SĐT</button>
+          <button class="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 flex items-center gap-1.5"><i data-lucide="key" class="w-3.5 h-3.5"></i> Lộ Thông Tin Cánh Nhân</button>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-xs font-semibold text-gray-300">Nhập địa chỉ đường dẫn (URL) cần kiểm tra:</label>
+          <div class="relative">
+            <textarea id="ai-input" rows="4" placeholder="Ví dụ: https://nhan-qua-tri-an-2026.com hoặc dán tin nhắn có dấu hiệu lừa đảo vào đây..." class="w-full p-4 rounded-xl bg-gray-950/80 border border-gray-800 text-sm text-gray-100 placeholder-gray-600 focus:outline-none focus:border-cyan-500 transition-colors resize-none"></textarea>
+            <div class="absolute right-3 bottom-3 flex items-center gap-2">
+              <button onclick="pasteExample()" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-[11px] text-gray-300 flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i> Dán</button>
+              <button onclick="clearInput()" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-[11px] text-gray-300 flex items-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> Xóa</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button onclick="runAIAnalysis()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/25 transition-all flex items-center gap-2">
+            <i data-lucide="wand-2" class="w-4 h-4"></i> Phân Tích Bằng AI Nguyên Bản
+          </button>
+        </div>
+
+        <!-- Result Box (Hidden by default) -->
+        <div id="ai-result" class="hidden p-5 rounded-xl bg-red-950/30 border border-red-500/40 space-y-3">
+          <div class="flex items-center gap-2 text-red-400 font-bold text-sm">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i> CẢNH BÁO RỦI RO CẠO: WEBSITE GIẢ MẠO LỪA ĐẢO
+          </div>
+          <p class="text-xs text-gray-300 leading-relaxed">
+            Hệ thống phát hiện URL chứa tên miền giả mạo thương hiệu chính thức. Tên miền mới khởi tạo trong vòng 7 ngày, chứa mã độc đánh cắp tài khoản ngân hàng và OTP.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. TRA CỨU DỮ LIỆU ==================== -->
+    <section id="tab-tra-cuu" class="tab-content hidden space-y-6">
+      <div class="text-center space-y-2">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800/80 uppercase tracking-wider">Cơ sở dữ liệu cộng đồng & Bộ Công An</span>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white">Tra Cứu Danh Sách Đen Lừa Đảo</h1>
+        <p class="text-gray-400 text-xs md:text-sm max-w-2xl mx-auto">Tìm kiếm ngay các Số Tài Khoản, Số Điện Thoại hoặc Tên Miền bị cảnh báo.</p>
+      </div>
+
+      <!-- Search Input -->
+      <div class="max-w-2xl mx-auto relative">
+        <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+        <input type="text" id="search-input" onkeyup="filterBlacklist()" placeholder="Nhập STK, SĐT hoặc Tên Miền..." class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-900 border border-gray-800 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors shadow-inner">
+      </div>
+
+      <!-- Blacklist Table -->
+      <div class="bg-gray-900/80 border border-gray-800/90 rounded-2xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs md:text-sm">
+            <thead class="bg-gray-950/80 text-gray-400 uppercase font-bold border-b border-gray-800 text-[11px] tracking-wider">
+              <tr>
+                <th class="px-6 py-4">Đối tượng bị cảnh báo</th>
+                <th class="px-6 py-4">Phân loại</th>
+                <th class="px-6 py-4">Ngân hàng / Tổ chức</th>
+                <th class="px-6 py-4">Hành vi lừa đảo</th>
+                <th class="px-6 py-4 text-center">Mức độ</th>
+                <th class="px-6 py-4 text-right">Cập nhật</th>
+              </tr>
+            </thead>
+            <tbody id="blacklist-tbody" class="divide-y divide-gray-800/60 text-gray-300">
+              <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="px-6 py-4 font-bold text-cyan-400">1029384910</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-gray-800 text-gray-400 text-[11px]">STK Ngân Hàng</span></td>
+                <td class="px-6 py-4 font-medium">MBBank (Nguyen Van A)</td>
+                <td class="px-6 py-4">Giả mạo bán xe máy giá rẻ, đòi cọc</td>
+                <!-- SỬA LỖI VIỀN XÔ LỆCH VÀ GÃY DÒNG BADGE CỰC CHUẨN -->
+                <td class="px-6 py-4 text-center">
+                  <span class="badge-pill badge-lua-dao">LỪA ĐẢO</span>
+                </td>
+                <td class="px-6 py-4 text-right text-gray-500 text-xs">26/09/2026</td>
+              </tr>
+
+              <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="px-6 py-4 font-bold text-cyan-400">dichvucong-gov-nhan-qua.top</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-gray-800 text-gray-400 text-[11px]">Tên Miền</span></td>
+                <td class="px-6 py-4 font-medium">Website Giả Mạo</td>
+                <td class="px-6 py-4">Giả mạo Dịch vụ công để đánh cắp OTP</td>
+                <td class="px-6 py-4 text-center">
+                  <span class="badge-pill badge-nguy-hiem">NGUY HIỂM</span>
+                </td>
+                <td class="px-6 py-4 text-right text-gray-500 text-xs">25/09/2026</td>
+              </tr>
+
+              <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="px-6 py-4 font-bold text-cyan-400">0912.883.992</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-gray-800 text-gray-400 text-[11px]">Số Điện Thoại</span></td>
+                <td class="px-6 py-4 font-medium">Mạo Danh Công An</td>
+                <td class="px-6 py-4">Gọi điện dọa nợ phạt nguội giao thông</td>
+                <td class="px-6 py-4 text-center">
+                  <span class="badge-pill badge-canh-bao">CẢNH BÁO</span>
+                </td>
+                <td class="px-6 py-4 text-right text-gray-500 text-xs">24/09/2026</td>
+              </tr>
+
+              <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="px-6 py-4 font-bold text-cyan-400">9988102938</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-gray-800 text-gray-400 text-[11px]">STK Ngân Hàng</span></td>
+                <td class="px-6 py-4 font-medium">VietinBank (Trinh Thi B)</td>
+                <td class="px-6 py-4">Chiếm đoạt tiền ứng tuyển việc làm online</td>
+                <td class="px-6 py-4 text-center">
+                  <span class="badge-pill badge-lua-dao">LỪA ĐẢO</span>
+                </td>
+                <td class="px-6 py-4 text-right text-gray-500 text-xs">24/09/2026</td>
+              </tr>
+
+              <tr class="hover:bg-gray-800/40 transition-colors">
+                <td class="px-6 py-4 font-bold text-cyan-400">shopee-nhan-hoa-hong2026.net</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-gray-800 text-gray-400 text-[11px]">Tên Miền</span></td>
+                <td class="px-6 py-4 font-medium">Website Giả Mạo</td>
+                <td class="px-6 py-4">Bẫy tuyển dụng chốt đơn hoa hồng</td>
+                <td class="px-6 py-4 text-center">
+                  <span class="badge-pill badge-nguy-hiem">NGUY HIỂM</span>
+                </td>
+                <td class="px-6 py-4 text-right text-gray-500 text-xs">22/09/2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 4. CẨM NANG LỪA ĐẢO ==================== -->
+    <section id="tab-cam-nang" class="tab-content hidden space-y-6">
+      <div class="text-center space-y-2">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-950 text-amber-400 border border-amber-800/80 uppercase tracking-wider">Nâng cao cảnh giác</span>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white">Cẩm Nang & Các Thủ Đoạn Lừa Đảo Phổ Biến</h1>
+        <p class="text-gray-400 text-xs md:text-sm max-w-2xl mx-auto">Trang bị kiến thức phòng tránh để tự bảo vệ bản thân và gia đình trước các hình thức lừa đảo tinh vi.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="p-6 rounded-2xl bg-gray-900/80 border border-gray-800 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-950 text-purple-400 border border-purple-800/60 flex items-center justify-center">
+              <i data-lucide="user-x" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white leading-snug">Giả Danh Công An / Cơ Quan Pháp Luật</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">Đối tượng gọi điện thông báo bạn liên quan đến vụ án ma túy, rửa tiền, yêu cầu chuyển tiền vào "tài khoản tạm giữ" để điều tra.</p>
+          </div>
+          <div class="p-3 rounded-lg bg-gray-950 border border-gray-800/80 text-[11px]">
+            <p class="text-amber-400 font-bold mb-0.5">🛡️ Quy Tắc Vàng:</p>
+            <p class="text-gray-400">Cơ quan chức năng KHÔNG làm việc qua điện thoại và KHÔNG yêu cầu chuyển tiền.</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="p-6 rounded-2xl bg-gray-900/80 border border-gray-800 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-950 text-blue-400 border border-blue-800/60 flex items-center justify-center">
+              <i data-lucide="briefcase" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white leading-snug">Tuyển Dụng Việc Làm Online / Nạp Thẻ Nhận Hoa Hồng</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">Hứa hẹn "việc nhẹ lương cao", làm nhiệm vụ xem YouTube, chốt đơn Shopee/Tiki giả định. Ban đầu trả hoa hồng nhỏ, sau đó chiếm đoạt tiền nạp.</p>
+          </div>
+          <div class="p-3 rounded-lg bg-gray-950 border border-gray-800/80 text-[11px]">
+            <p class="text-amber-400 font-bold mb-0.5">🛡️ Quy Tắc Vàng:</p>
+            <p class="text-gray-400">Không có công việc chân chính nào yêu cầu nạp tiền cá nhân để ứng tuyển hay làm nhiệm vụ.</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="p-6 rounded-2xl bg-gray-900/80 border border-gray-800 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-pink-950 text-pink-400 border border-pink-800/60 flex items-center justify-center">
+              <i data-lucide="video" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white leading-snug">Deepfake Video Call Giả Người Thân</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">Sử dụng AI ghép mặt và giọng nói của người thân để gọi video call 5-10 giây (vờ chập chờn) rồi nhắn tin mượn tiền gấp.</p>
+          </div>
+          <div class="p-3 rounded-lg bg-gray-950 border border-gray-800/80 text-[11px]">
+            <p class="text-amber-400 font-bold mb-0.5">🛡️ Quy Tắc Vàng:</p>
+            <p class="text-gray-400">Gọi điện lại bằng kênh liên lạc truyền thống thông thường để xác minh trực tiếp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 5. BÁO CÁO VI PHẠM (TRANG ĐIỀN FORM) ==================== -->
+    <section id="tab-bao-cao" class="tab-content hidden space-y-6">
+      <div class="text-center space-y-2">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-950 text-red-400 border border-red-800/80 uppercase tracking-wider">Chung tay bảo vệ cộng đồng</span>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white">Gửi Báo Cáo Vi Phạm & Lừa Đảo</h1>
+        <p class="text-gray-400 text-xs md:text-sm max-w-2xl mx-auto">Báo cáo của bạn sẽ được AI thẩm định sơ bộ và cập nhật vào danh sách đen cảnh báo cho toàn bộ cộng đồng.</p>
+      </div>
+
+      <form onsubmit="submitReport(event)" class="max-w-2xl mx-auto p-6 md:p-8 rounded-2xl bg-gray-900/80 border border-gray-800/90 shadow-xl space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-gray-300">LOẠI HÌNH LỪA ĐẢO *</label>
+            <select required class="w-full p-3 rounded-xl bg-gray-950 border border-gray-800 text-xs text-gray-200 focus:outline-none focus:border-cyan-500">
+              <option value="">-- Chọn hình thức --</option>
+              <option value="stk">Giả mạo/Chiếm đoạt tài sản qua STK</option>
+              <option value="link">Website/Link độc hại giả mạo</option>
+              <option value="sdt">SĐT Giả danh công an / ngân hàng</option>
+              <option value="other">Thủ đoạn lừa đảo khác</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-gray-300">THÔNG TIN CỤ THỂ (STK / SĐT / LINK) *</label>
+            <input type="text" required placeholder="Ví dụ: 10293849302 hoặc https://..." class="w-full p-3 rounded-xl bg-gray-950 border border-gray-800 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-gray-300">TÊN NGÂN HÀNG / TỔ CHỨC LIÊN QUAN</label>
+            <input type="text" placeholder="Ví dụ: Vietcombank, Techcombank..." class="w-full p-3 rounded-xl bg-gray-950 border border-gray-800 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500">
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-gray-300">SỐ TIỀN BỊ CHIẾM ĐOẠT (NẾU CÓ)</label>
+            <input type="text" placeholder="Ví dụ: 5.000.000 VNĐ" class="w-full p-3 rounded-xl bg-gray-950 border border-gray-800 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500">
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold text-gray-300">MÔ TẢ DIỄN BIẾN SỰ VIỆC *</label>
+          <textarea required rows="4" placeholder="Mô tả chi tiết kịch bản lừa đảo, lời nói hoặc tin nhắn của đối tượng..." class="w-full p-3 rounded-xl bg-gray-950 border border-gray-800 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="anonymous" class="rounded border-gray-800 bg-gray-950 text-cyan-500 focus:ring-0">
+          <label for="anonymous" class="text-xs text-gray-400">Gửi báo cáo ẩn danh (Không hiển thị thông tin cá nhân của bạn)</label>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-red-600/30 transition-all flex items-center justify-center gap-2">
+          <i data-lucide="send" class="w-4 h-4"></i> Gửi Báo Cáo Ngay
+        </button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ==================== FLOATING AI ASSISTANT ICON (GÓC DƯỚI BÊN PHẢI) ==================== -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    
+    <!-- AI CHAT MODAL DIALOG -->
+    <div id="ai-chat-modal" class="hidden w-[90vw] sm:w-[380px] h-[500px] mb-4 rounded-2xl bg-[#0d1322] border border-cyan-500/30 shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl transition-all duration-300">
+      
+      <!-- Modal Header -->
+      <div class="px-4 py-3 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white">Trợ Lý AI Tư Vấn An Toàn Số</h4>
+            <div class="flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-[10px] text-emerald-400 font-medium">Trực tuyến 24/7</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="toggleChatModal()" class="p-1 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Chat Messages Body -->
+      <div id="chat-body" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-800 flex items-center justify-center text-cyan-400 flex-shrink-0 mt-0.5">
+            <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+          </div>
+          <div class="p-3 rounded-2xl rounded-tl-none bg-gray-900 border border-gray-800 text-gray-200 max-w-[80%] leading-relaxed">
+            Xin chào! Tôi là Trợ Lý AI Chống Lừa Đảo. Bạn đang nghi ngờ về tin nhắn, cuộc gọi hay giao dịch nào? Hãy hỏi tôi ngay nhé!
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input Footer -->
+      <div class="p-3 bg-gray-900/90 border-t border-gray-800 flex items-center gap-2">
+        <input type="text" id="chat-input" onkeypress="handleChatKeyPress(event)" placeholder="Hỏi AI về tình huống lừa đảo..." class="flex-1 px-3 py-2 rounded-xl bg-gray-950 border border-gray-800 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500">
+        <button onclick="sendChatMessage()" class="p-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Trigger Button -->
+    <button onclick="toggleChatModal()" class="w-14 h-14 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-cyan-500/30 flex items-center justify-center text-black relative group">
+      <i data-lucide="bot" class="w-7 h-7"></i>
+      <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-gray-900"></span>
+      
+      <!-- Tooltip -->
+      <span class="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-700 text-white text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+        Hỏi Trợ Lý AI
+      </span>
+    </button>
+  </div>
+
+  <!-- JAVASCRIPT CORE LOGIC -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // TAB SWITCHING LOGIC
+    function switchTab(tabId) {
+      // Hide all contents
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      // Show selected content
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+
+      // Update Nav buttons styling
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.className = 'nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-gray-800/50';
+      });
+
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) {
+        activeNav.className = 'nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-cyan-400 bg-cyan-950/40 border border-cyan-800/50';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+  
+    let currentSlide = 0;
+    const totalSlides = 3;
+
+    function updateSlider() {
+      const slider = document.getElementById('banner-slider');
+      if (slider) {
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      }
+      
+      // Update dots
+      const dots = document.querySelectorAll('.slide-dot');
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.className = 'slide-dot w-3 h-3 rounded-full bg-cyan-400 transition-all';
+        } else {
+          dot.className = 'slide-dot w-3 h-3 rounded-full bg-gray-600 transition-all';
+        }
+      });
+    }
+
+    function moveSlide(direction) {
+      currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+      updateSlider();
+    }
+
+    function setSlide(index) {
+      currentSlide = index;
+      updateSlider();
+    }
+
+    
+    setInterval(() => {
+      const homeTab = document.getElementById('tab-trang-chu');
+      if (homeTab && !homeTab.classList.contains('hidden')) {
+        moveSlide(1);
+      }
+    }, 5000);
+
+    
+    function pasteExample() {
+      document.getElementById('ai-input').value = 'https://nhan-qua-tri-an-2026.com/dang-nhap';
+    }
+
+    function clearInput() {
+      document.getElementById('ai-input').value = '';
+      document.getElementById('ai-result').classList.add('hidden');
+    }
+
+    function runAIAnalysis() {
+      const val = document.getElementById('ai-input').value;
+      if (!val) {
+        alert('Vui lòng nhập link hoặc nội dung cần kiểm tra!');
+        return;
+      }
+      document.getElementById('ai-result').classList.remove('hidden');
+    }
+
+    // BLACKLIST SEARCH FILTER
+    function filterBlacklist() {
+      const input = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('#blacklist-tbody tr');
+      
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (text.includes(input)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // FLOATING CHAT MODAL LOGIC
+    function toggleChatModal() {
+      const modal = document.getElementById('ai-chat-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    function handleChatKeyPress(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const body = document.getElementById('chat-body');
+
+      // User Message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'flex items-start justify-end gap-2.5';
+      userMsg.innerHTML = `
+        <div class="p-3 rounded-2xl rounded-tr-none bg-cyan-600 text-black font-medium max-w-[80%] leading-relaxed">
+          ${text}
+        </div>
+      `;
+      body.appendChild(userMsg);
+
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+
+      
+      setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'flex items-start gap-2.5';
+        aiMsg.innerHTML = `
+          <div class="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-800 flex items-center justify-center text-cyan-400 flex-shrink-0 mt-0.5">
+            <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+          </div>
+          <div class="p-3 rounded-2xl rounded-tl-none bg-gray-900 border border-gray-800 text-gray-200 max-w-[80%] leading-relaxed">
+            Hệ thống AFA AI khuyến cáo: Bạn tuyệt đối KHÔNG cung cấp mã OTP, mật khẩu hay chuyển khoản tiền đặt cọc cho đối tượng này!
+          </div>
+        `;
+        body.appendChild(aiMsg);
+        lucide.createIcons();
+        body.scrollTop = body.scrollHeight;
+      }, 700);
+    }
+
+    // FORM SUBMIT
+    function submitReport(e) {
+      e.preventDefault();
+      alert('Cảm ơn bạn! Báo cáo vi phạm đã được gửi thành công đến hệ thống AFA AI.');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
